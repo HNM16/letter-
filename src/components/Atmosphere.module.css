@@ -1,0 +1,234 @@
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% -10%, #fffdf8 0%, rgba(255, 253, 248, 0) 60%),
+    radial-gradient(90% 70% at 100% 100%, rgba(244, 220, 216, 0.7) 0%, rgba(244, 220, 216, 0) 70%),
+    radial-gradient(80% 60% at 0% 90%, rgba(233, 220, 196, 0.55) 0%, rgba(233, 220, 196, 0) 70%),
+    linear-gradient(180deg, #fcf8f1 0%, #f7eee1 100%);
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.glowRose {
+  top: -22vmax;
+  left: -18vmax;
+  width: 72vmax;
+  height: 72vmax;
+  background: radial-gradient(closest-side, rgba(240, 190, 196, 0.5), rgba(240, 190, 196, 0));
+  animation: drift 28s ease-in-out infinite alternate;
+}
+
+.glowGold {
+  right: -20vmax;
+  bottom: -24vmax;
+  width: 76vmax;
+  height: 76vmax;
+  background: radial-gradient(closest-side, rgba(228, 202, 136, 0.42), rgba(228, 202, 136, 0));
+  animation: drift 34s ease-in-out infinite alternate-reverse;
+}
+
+.glowCream {
+  top: 28%;
+  left: 50%;
+  width: 90vmax;
+  height: 60vmax;
+  margin-left: -45vmax;
+  background: radial-gradient(closest-side, rgba(255, 252, 244, 0.85), rgba(255, 252, 244, 0));
+  animation: breathe 9s ease-in-out infinite alternate;
+  animation-name: breathe;
+}
+
+.glowHalo {
+  top: 50%;
+  left: 50%;
+  width: 110vmin;
+  height: 110vmin;
+  margin: -55vmin 0 0 -55vmin;
+  background: radial-gradient(closest-side, rgba(240, 214, 150, 0.5), rgba(240, 190, 196, 0.22) 55%, rgba(240, 190, 196, 0));
+  animation: halo 6s ease-in-out infinite alternate;
+}
+
+.rays {
+  position: absolute;
+  top: -10%;
+  left: -20%;
+  width: 140%;
+  height: 90%;
+  background: linear-gradient(
+    112deg,
+    transparent 18%,
+    rgba(255, 240, 208, 0.42) 26%,
+    transparent 34%,
+    transparent 46%,
+    rgba(255, 240, 208, 0.3) 53%,
+    transparent 60%,
+    transparent 70%,
+    rgba(255, 240, 208, 0.22) 76%,
+    transparent 82%
+  );
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+  animation: rays 16s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.group {
+  position: absolute;
+  inset: 0;
+  animation: appear 2.4s ease-out both;
+}
+
+.dust,
+.heart {
+  position: absolute;
+  bottom: -30px;
+  will-change: transform, opacity;
+}
+
+.dust {
+  border-radius: 50%;
+  opacity: 0;
+  animation: rise linear infinite;
+}
+
+.heart {
+  opacity: 0;
+  animation: rise-heart linear infinite;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: var(--paper-grain);
+  opacity: 0.1;
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 100% at 50% 50%, rgba(255, 255, 255, 0) 55%, rgba(168, 128, 96, 0.14) 100%);
+}
+
+@media (max-width: 600px) {
+  .dust:nth-child(n + 9) {
+    display: none;
+  }
+  .heart:nth-child(n + 6) {
+    display: none;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(5vmax, 4vmax, 0) scale(1.08);
+  }
+}
+
+@keyframes breathe {
+  from {
+    transform: scale(0.96);
+    opacity: 0.7;
+  }
+  to {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+@keyframes halo {
+  from {
+    transform: scale(0.92);
+    opacity: 0.75;
+  }
+  to {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes rays {
+  from {
+    transform: translate3d(-3%, 0, 0);
+    opacity: 0.55;
+  }
+  to {
+    transform: translate3d(3%, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(var(--sway), -55vh, 0);
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(calc(var(--sway) * -0.6), -112vh, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes rise-heart {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-12deg) scale(0.9);
+    opacity: 0;
+  }
+  15% {
+    opacity: var(--peak, 1);
+  }
+  50% {
+    transform: translate3d(var(--sway), -55vh, 0) rotate(10deg) scale(1);
+  }
+  100% {
+    transform: translate3d(calc(var(--sway) * -0.7), -112vh, 0) rotate(-8deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dust,
+  .heart,
+  .rays,
+  .glow {
+    animation: none;
+  }
+  .dust,
+  .heart {
+    display: none;
+  }
+}

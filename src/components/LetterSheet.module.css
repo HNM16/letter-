@@ -1,0 +1,334 @@
+.sheet {
+  --sheet-w: min(92vw, 620px);
+
+  position: relative;
+  width: var(--sheet-w);
+  margin: 0 auto;
+  padding: clamp(2.6rem, 8vw, 4rem) clamp(1.7rem, 7.5vw, 3.6rem) clamp(2.4rem, 7vw, 3.4rem);
+  border-radius: 3px;
+  background: var(--paper-bg);
+  box-shadow:
+    0 30px 60px -24px rgba(100, 70, 50, 0.5),
+    0 6px 16px rgba(100, 70, 50, 0.16);
+  color: var(--ink);
+  cursor: default;
+}
+
+/* fold marks: the letter was folded in three */
+.creases {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.6s ease;
+}
+
+.creases::before,
+.creases::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(180deg, rgba(110, 80, 50, 0.07), rgba(255, 255, 255, 0.55));
+}
+
+.creases::before {
+  top: 33.3333%;
+}
+
+.creases::after {
+  top: 66.6667%;
+}
+
+/* a thin gold frame, like good stationery */
+.frame {
+  position: absolute;
+  inset: clamp(10px, 2.4vw, 16px);
+  border: 1px solid rgba(184, 146, 74, 0.42);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.frame::before,
+.frame::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--paper);
+  border: 1px solid rgba(184, 146, 74, 0.7);
+  transform: rotate(45deg);
+}
+
+.frame::before {
+  top: -4px;
+  left: calc(50% - 3.5px);
+}
+
+.frame::after {
+  bottom: -4px;
+  left: calc(50% - 3.5px);
+}
+
+.writing .frame,
+.instant .frame,
+.writing .creases,
+.instant .creases {
+  opacity: 1;
+}
+
+/* ---------- handwriting: a left-to-right ink wipe ---------- */
+
+.ink,
+.word {
+  display: inline-block;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.writing .ink {
+  animation: write var(--dur, 1500ms) cubic-bezier(0.4, 0.1, 0.3, 1) var(--delay) both;
+}
+
+.writing .word {
+  animation: write 520ms cubic-bezier(0.3, 0.6, 0.3, 1) var(--delay) both;
+}
+
+.instant .ink,
+.instant .word {
+  opacity: 1;
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: none;
+}
+
+.header {
+  text-align: left;
+}
+
+.salutation {
+  font-family: var(--font-hand);
+  font-weight: 400;
+  font-size: clamp(1.7rem, 7.6vw, 3rem);
+  line-height: 1.2;
+  color: var(--rose-deep);
+  text-wrap: balance;
+}
+
+.flourish {
+  display: block;
+  width: min(62%, 220px);
+  margin-top: 0.3rem;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.flourish path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.writing .flourish path {
+  animation: draw 1.3s ease-in-out 1.3s both;
+}
+
+.instant .flourish path {
+  stroke-dashoffset: 0;
+}
+
+.body {
+  margin-top: clamp(1.4rem, 5vw, 2rem);
+}
+
+.paragraph + .paragraph {
+  margin-top: 1.55em;
+}
+
+.paragraph {
+  font-size: clamp(1.14rem, 4.7vw, 1.42rem);
+  line-height: 1.75;
+  color: var(--ink);
+}
+
+.line {
+  display: block;
+}
+
+.line + .line {
+  margin-top: 0.15em;
+}
+
+/* ---------- signature ---------- */
+
+.signature {
+  margin-top: clamp(2.2rem, 8vw, 3.2rem);
+  text-align: center;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+}
+
+.divider span {
+  width: clamp(40px, 16vw, 90px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.divider span:last-child {
+  transform: scaleX(-1);
+}
+
+.divider i {
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.farewell {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+  font-family: var(--font-hand);
+  font-size: clamp(2.5rem, 12vw, 3.8rem);
+  line-height: 1.15;
+  color: var(--rose-deep);
+  text-shadow: 0 2px 18px rgba(217, 140, 147, 0.35);
+}
+
+.farewellText {
+  display: inline-block;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  mask-image: linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size: 250% 100%;
+  mask-size: 250% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.farewellHeart {
+  width: 0.62em;
+  height: 0.62em;
+  margin-top: 0.1em;
+  opacity: 0;
+  filter: drop-shadow(0 4px 10px rgba(185, 96, 108, 0.4));
+}
+
+.writing .divider {
+  animation: appear 0.9s ease var(--delay) both;
+}
+
+.writing .farewellText {
+  animation: write 1300ms cubic-bezier(0.4, 0.1, 0.3, 1) calc(var(--delay) + 150ms) both;
+}
+
+.writing .farewellHeart {
+  animation:
+    pop 0.8s cubic-bezier(0.3, 1.5, 0.5, 1) calc(var(--delay) + 1200ms) both,
+    heartbeat 2.8s ease-in-out calc(var(--delay) + 2100ms) infinite;
+}
+
+.instant .divider,
+.instant .farewellText,
+.instant .farewellHeart {
+  opacity: 1;
+  -webkit-mask-image: none;
+  mask-image: none;
+  animation: none;
+}
+
+.instant .farewellHeart {
+  animation: heartbeat 2.8s ease-in-out infinite;
+}
+
+@keyframes write {
+  0% {
+    opacity: 0;
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+    transform: translateY(3px);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+    transform: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  8% {
+    transform: scale(1.16);
+  }
+  16% {
+    transform: scale(1);
+  }
+  24% {
+    transform: scale(1.1);
+  }
+  34% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instant .farewellHeart {
+    animation: none;
+  }
+}

@@ -1,0 +1,48 @@
+.root {
+  display: contents;
+}
+
+.layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* far butterflies fly behind the paper, near ones in front of it */
+.back {
+  z-index: 1;
+}
+
+.front {
+  z-index: 20;
+}
+
+.butterfly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 6px 6px rgba(120, 70, 60, 0.18));
+}
+
+.butterfly :global(.bf-wing) {
+  transform-box: fill-box;
+  transform-origin: 0% 50%;
+  animation: flap var(--flap, 0.4s) ease-in-out var(--flap-phase, 0s) infinite alternate;
+}
+
+@keyframes flap {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0.2);
+  }
+}
+
+.root[data-reduced='true'] .butterfly :global(.bf-wing) {
+  animation: none;
+  transform: scaleX(0.8);
+}

@@ -1,0 +1,255 @@
+.gate {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: max(2rem, env(safe-area-inset-top)) 1.25rem max(2rem, env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1.6rem;
+}
+
+.ornament span {
+  width: clamp(44px, 14vw, 84px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.ornament span:last-child {
+  transform: scaleX(-1);
+}
+
+.ornament i {
+  width: 7px;
+  height: 7px;
+  background: var(--gold);
+  transform: rotate(45deg);
+}
+
+.title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.18em;
+  font-family: var(--font-serif-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(3rem, 13vw, 5.4rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-shadow: 0 2px 24px rgba(255, 255, 255, 0.8);
+}
+
+.titleHeart {
+  width: 0.5em;
+  height: 0.5em;
+  margin-top: 0.12em;
+  filter: drop-shadow(0 3px 8px rgba(185, 96, 108, 0.35));
+  animation: beat 2.8s ease-in-out infinite;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 1.4rem;
+}
+
+.prompt {
+  margin-bottom: 1.5rem;
+  font-size: 1.02rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+.shakeWrap {
+  width: min(88vw, 360px);
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 68px;
+  padding: 0 7px 0 1.4rem;
+  border: 1px solid rgba(184, 146, 74, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 18px 40px -18px rgba(120, 80, 60, 0.4),
+    inset 0 2px 6px rgba(184, 146, 74, 0.1);
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.field:focus-within {
+  border-color: var(--gold);
+  box-shadow:
+    0 18px 40px -18px rgba(120, 80, 60, 0.4),
+    0 0 0 5px rgba(226, 200, 135, 0.25),
+    inset 0 2px 6px rgba(184, 146, 74, 0.1);
+}
+
+.field[data-state='error'] {
+  border-color: var(--rose-deep);
+  background: rgba(255, 244, 242, 0.9);
+  box-shadow:
+    0 18px 40px -18px rgba(185, 96, 108, 0.45),
+    0 0 0 5px rgba(217, 140, 147, 0.2);
+}
+
+.field[data-state='success'] {
+  border-color: var(--gold);
+  background: rgba(255, 250, 235, 0.95);
+  box-shadow:
+    0 0 0 6px rgba(226, 200, 135, 0.35),
+    0 0 46px rgba(226, 200, 135, 0.6);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  text-align: center;
+  font-family: var(--font-serif-display);
+  font-weight: 500;
+  /* 16px or larger keeps iOS Safari from zooming the page on focus */
+  font-size: 1.7rem;
+  letter-spacing: 0.14em;
+  color: var(--ink);
+  /* balances the round button on the right so the text is visually centred */
+  margin-left: 46px;
+  caret-color: var(--rose-deep);
+}
+
+.input::placeholder {
+  color: rgba(125, 106, 100, 0.45);
+  letter-spacing: 0.2em;
+  font-style: italic;
+}
+
+.input:disabled {
+  opacity: 1;
+  color: var(--ink);
+}
+
+.submit {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #fffaf3;
+  background: linear-gradient(135deg, #e6bba8, #d98c93 60%, #c9737f);
+  box-shadow:
+    0 8px 18px -6px rgba(185, 96, 108, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.3s var(--ease-soft);
+}
+
+.submit:active {
+  transform: scale(0.92);
+}
+
+.submit svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.field[data-state='success'] .ring {
+  border: 2px solid var(--gold-light);
+  animation: ring 0.9s ease-out forwards;
+}
+
+.error {
+  min-height: 2.4rem;
+  margin-top: 1rem;
+  font-family: var(--font-hand);
+  font-size: 1.4rem;
+  color: var(--rose-deep);
+}
+
+.error span {
+  display: inline-block;
+  animation: fade-in 0.45s ease both;
+}
+
+@keyframes ring {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.22, 1.8);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  8% {
+    transform: scale(1.14);
+  }
+  16% {
+    transform: scale(1);
+  }
+  24% {
+    transform: scale(1.1);
+  }
+  34% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleHeart {
+    animation: none;
+  }
+}

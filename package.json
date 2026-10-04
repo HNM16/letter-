@@ -1,0 +1,17 @@
+{
+  "name": "letter-for-sabina",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive digital letter asking for forgiveness.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "framer-motion": "^14.0.0",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  }
+}
