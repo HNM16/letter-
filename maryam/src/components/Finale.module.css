@@ -1,0 +1,198 @@
+.finale {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  padding: max(1.5rem, env(safe-area-inset-top)) 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+  overflow-x: hidden;
+  overflow-y: auto;
+  text-align: center;
+}
+
+/* auto margins centre the content, and let it scroll from the top when the screen is too short */
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin: auto;
+}
+
+/* a soft flash that spreads from the button that was pressed */
+.burst {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 244, 214, 0.95), rgba(240, 190, 196, 0.55) 55%, rgba(240, 190, 196, 0));
+  pointer-events: none;
+  animation: burst 1.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.heartWrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(90px, min(36vw, 24vh), 190px);
+  aspect-ratio: 1;
+  margin-bottom: 0.6rem;
+}
+
+.heart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 12px 28px rgba(185, 96, 108, 0.45));
+  animation: beat 2.4s ease-in-out 1.6s infinite;
+}
+
+.glow {
+  position: absolute;
+  inset: -60%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 222, 170, 0.75), rgba(240, 170, 180, 0.3) 55%, rgba(240, 170, 180, 0));
+  animation: glow 3.2s ease-in-out infinite alternate;
+}
+
+.ring {
+  position: absolute;
+  inset: 8%;
+  border: 1.5px solid rgba(201, 154, 70, 0.6);
+  border-radius: 50%;
+  animation: ripple 3.8s ease-out 1.4s infinite;
+  opacity: 0;
+}
+
+.ring2 {
+  animation-delay: 2.7s;
+}
+
+.words {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.title {
+  max-width: 14ch;
+  font-family: var(--font-serif-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.4rem, min(12.5vw, 11vh), 5.6rem);
+  line-height: 1.04;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+.word {
+  display: inline-block;
+  padding: 0 0.05em 0.12em;
+  background: linear-gradient(115deg, #a9803a 0%, #dcb765 36%, #cf7a86 76%, #b9606c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.titleHeart {
+  display: inline-block;
+  vertical-align: 0.04em;
+}
+
+.smallHeart {
+  width: 0.58em;
+  height: 0.58em;
+  margin-left: 0.05em;
+  filter: drop-shadow(0 4px 10px rgba(185, 96, 108, 0.4));
+}
+
+.line {
+  max-width: 30ch;
+  font-size: clamp(1.2rem, 4.8vw, 1.6rem);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.lineSoft {
+  font-family: var(--font-hand);
+  font-size: clamp(1.45rem, 5.8vw, 2rem);
+  line-height: 1.35;
+  color: var(--rose-deep);
+}
+
+@media (min-width: 760px) {
+  .title {
+    max-width: none;
+  }
+
+  .line {
+    max-width: 38ch;
+  }
+}
+
+@keyframes burst {
+  0% {
+    opacity: 1;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(48);
+  }
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  8% {
+    transform: scale(1.1);
+  }
+  16% {
+    transform: scale(1);
+  }
+  24% {
+    transform: scale(1.07);
+  }
+  34% {
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.7;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ripple {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heart,
+  .glow,
+  .ring,
+  .burst {
+    animation: none;
+  }
+  .ring,
+  .burst {
+    display: none;
+  }
+}
