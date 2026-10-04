@@ -293,7 +293,7 @@
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
-.address svg {
+.address > svg {
   display: block;
   width: 78%;
   margin: 4px auto 0;

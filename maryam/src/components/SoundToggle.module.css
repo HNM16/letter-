@@ -1,0 +1,58 @@
+.toggle {
+  position: fixed;
+  top: max(0.9rem, env(safe-area-inset-top));
+  right: max(0.9rem, env(safe-area-inset-right));
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid rgba(184, 146, 74, 0.45);
+  border-radius: 50%;
+  color: var(--ink-soft);
+  background: rgba(255, 253, 248, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px -10px rgba(120, 80, 60, 0.4);
+  animation: appear 1.2s ease 0.4s both;
+  transition:
+    transform 0.3s var(--ease-soft),
+    background-color 0.3s ease;
+}
+
+.toggle:active {
+  transform: scale(0.92);
+}
+
+.toggle svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.speaker {
+  fill: currentColor;
+  fill-opacity: 0.18;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle {
+    animation: none;
+  }
+}
