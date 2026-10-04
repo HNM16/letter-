@@ -1,0 +1,4 @@
+.page {
+  position: relative;
+  padding: max(1.5rem, env(safe-area-inset-top)) 0 max(4rem, calc(env(safe-area-inset-bottom) + 2.5rem));
+}

@@ -1,0 +1,203 @@
+.block {
+  position: relative;
+  width: min(92vw, 560px);
+  margin: clamp(2.5rem, 8vw, 4rem) auto 0;
+  padding: clamp(2rem, 7vw, 3rem) clamp(1.25rem, 6vw, 2.5rem) clamp(2.2rem, 7vw, 3rem);
+  border: 1px solid rgba(184, 146, 74, 0.4);
+  border-radius: 28px;
+  text-align: center;
+  background: linear-gradient(160deg, rgba(255, 253, 248, 0.88), rgba(250, 238, 232, 0.8));
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 30px 60px -28px rgba(120, 80, 60, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition:
+    opacity 1s var(--ease-soft),
+    transform 1s var(--ease-soft),
+    visibility 0s linear 0s;
+}
+
+.block[data-visible='false'] {
+  opacity: 0;
+  transform: translateY(26px);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0s,
+    transform 0s,
+    visibility 0s;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.ornament span {
+  width: clamp(40px, 16vw, 80px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.ornament span:last-child {
+  transform: scaleX(-1);
+}
+
+.ornamentHeart {
+  width: 16px;
+  height: 16px;
+  color: var(--rose);
+}
+
+.title {
+  font-family: var(--font-serif-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(2.2rem, 9vw, 3.2rem);
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem 1.4rem;
+  margin-top: clamp(1.6rem, 6vw, 2.2rem);
+}
+
+.yesWrap {
+  transition: transform 0.6s var(--ease-soft);
+}
+
+.yesHeart {
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.4em;
+  color: #fff6ee;
+  animation: beat 2.4s ease-in-out infinite;
+}
+
+.slot {
+  display: inline-flex;
+}
+
+.no {
+  min-width: 112px;
+  touch-action: none;
+}
+
+/* While it runs it lives on top of everything, positioned against the screen */
+.floating {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  transform-origin: 0 0;
+  transform: translate3d(var(--x), var(--y), 0) scale(var(--s));
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.floating[data-instant='true'] {
+  transition: none;
+}
+
+.wiggle {
+  animation: wiggle 0.6s ease-out;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  z-index: 61;
+  max-width: min(88vw, 420px);
+  padding: 0.55rem 1.3rem 0.65rem;
+  border: 1px solid rgba(184, 146, 74, 0.5);
+  border-radius: 24px;
+  font-family: var(--font-hand);
+  font-size: clamp(1.15rem, 5vw, 1.4rem);
+  line-height: 1.25;
+  text-align: center;
+  text-wrap: balance;
+  width: max-content;
+  color: var(--rose-deep);
+  background: rgba(255, 252, 245, 0.95);
+  box-shadow: 0 14px 30px -12px rgba(120, 80, 60, 0.45);
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: toast 2.3s ease both;
+}
+
+.toast[data-edge='top'] {
+  top: max(1.2rem, env(safe-area-inset-top));
+}
+
+.toast[data-edge='bottom'] {
+  bottom: max(1.4rem, env(safe-area-inset-bottom));
+}
+
+@keyframes toast {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.96);
+  }
+  10%,
+  80% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-4px) scale(0.98);
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0) scale(0.9);
+  }
+  30% {
+    transform: rotate(-9deg) scale(1.06);
+  }
+  60% {
+    transform: rotate(6deg) scale(1);
+  }
+  100% {
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.22);
+  }
+  20% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.14);
+  }
+  42% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yesHeart,
+  .wiggle {
+    animation: none;
+  }
+  .floating {
+    transition-duration: 0.01ms;
+  }
+}

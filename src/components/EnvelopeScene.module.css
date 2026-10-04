@@ -1,0 +1,528 @@
+.scene {
+  /* The envelope is 3 : 2 and never wider than the screen or taller than it leaves room for */
+  --env-w: min(84vw, 430px, calc((100vh - 180px) / 0.68));
+  --env-w: min(84vw, 430px, calc((100dvh - 180px) / 0.68));
+  --env-h: calc(var(--env-w) * 0.68);
+  --flap-h: calc(var(--env-h) * 0.62);
+
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+
+.halo {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(55% 42% at 50% 46%, rgba(255, 238, 196, 0.65), rgba(255, 238, 196, 0) 72%);
+  animation: breathe 7s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ---------- the envelope ---------- */
+
+.envelope {
+  position: relative;
+  width: var(--env-w);
+  height: var(--env-h);
+  animation: float 7s ease-in-out infinite;
+}
+
+.isSeal .envelope {
+  animation-play-state: paused;
+}
+
+.shadow {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -30px;
+  z-index: -1;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(86, 56, 40, 0.38), rgba(86, 56, 40, 0));
+  filter: blur(3px);
+  transition: opacity 0.9s ease 0.2s;
+}
+
+.back {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 10px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.16) 0 1px, transparent 1px 9px),
+    linear-gradient(180deg, #e7c6c3 0%, #dcb2b1 100%);
+  box-shadow:
+    0 38px 60px -26px rgba(110, 70, 50, 0.55),
+    0 16px 28px -14px rgba(110, 70, 50, 0.32),
+    0 2px 5px rgba(110, 70, 50, 0.22);
+}
+
+/* the shade the closed flap casts inside */
+.back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(100, 45, 55, 0.3) 0%, rgba(100, 45, 55, 0) 40%);
+}
+
+.anchor {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+}
+
+/* ---------- the folded letter ---------- */
+
+.paper {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 3;
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  transform-origin: 50% 50%;
+  transform: translate3d(0, 0, 0) scale(var(--s0, 0.8));
+}
+
+.isRise .paper {
+  transform: translate3d(0, calc(var(--rise) * -1), 0) scale(var(--s0, 0.8)) rotate(-1.2deg);
+  transition: transform 1.5s cubic-bezier(0.45, 0.05, 0.35, 1);
+}
+
+.isPresent .paper {
+  z-index: 10;
+  transform: translate3d(var(--dx), var(--dy), 0) scale(1) rotate(0deg);
+  transition: transform 1.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.paperShadow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 33.3333%;
+  bottom: 33.3333%;
+  border-radius: 3px;
+  transform: translateZ(-1px);
+  box-shadow:
+    0 22px 44px -16px rgba(100, 70, 50, 0.5),
+    0 5px 14px rgba(100, 70, 50, 0.22);
+}
+
+.isUnfold .paperShadow {
+  top: 0;
+  bottom: 0;
+  transition:
+    top 1.15s cubic-bezier(0.4, 0.05, 0.25, 1),
+    bottom 1.15s cubic-bezier(0.4, 0.05, 0.25, 1) 0.5s;
+}
+
+.panel {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: calc(33.3333% + 1px);
+  transform-style: preserve-3d;
+}
+
+.panelTop {
+  top: 0;
+  transform-origin: 50% 100%;
+  transform: translateZ(2px) rotateX(-180deg);
+}
+
+.panelMid {
+  top: 33.3333%;
+}
+
+.panelBot {
+  top: calc(66.6667% - 1px);
+  transform-origin: 50% 0;
+  transform: translateZ(1px) rotateX(180deg);
+}
+
+.isUnfold .panelTop {
+  transform: translateZ(0) rotateX(0deg);
+  transition: transform 1.15s cubic-bezier(0.4, 0.05, 0.25, 1);
+}
+
+.isUnfold .panelBot {
+  transform: translateZ(0) rotateX(0deg);
+  transition: transform 1.15s cubic-bezier(0.4, 0.05, 0.25, 1) 0.5s;
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.faceFront {
+  background: var(--paper-bg);
+}
+
+.faceBack {
+  background: var(--paper-back-bg);
+  transform: rotateX(180deg);
+}
+
+/* the folded sheet is lit a little less than the open one */
+.faceFront::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(110, 80, 55, 0.13);
+  opacity: 0;
+}
+
+.isUnfold .panelTop .faceFront::after,
+.isUnfold .panelBot .faceFront::after {
+  animation: lit 1.15s ease-out both;
+}
+
+.isUnfold .panelBot .faceFront::after {
+  animation-delay: 0.5s;
+}
+
+/* ---------- the front of the envelope ---------- */
+
+.front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.front::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--paper-grain);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.pocketWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.pocketWrapSide {
+  filter: drop-shadow(1px 1px 1.5px rgba(110, 70, 45, 0.22));
+}
+
+.pocketWrapBottom {
+  filter: drop-shadow(0 -2px 3px rgba(110, 70, 45, 0.24));
+}
+
+.pocket {
+  position: absolute;
+  inset: 0;
+}
+
+.pocketLeft {
+  clip-path: polygon(0 0, 50% 54%, 0 100%);
+  background: linear-gradient(100deg, #fcf5ea 0%, #f4e7d6 100%);
+}
+
+.pocketRight {
+  clip-path: polygon(100% 0, 50% 54%, 100% 100%);
+  background: linear-gradient(260deg, #faf1e4 0%, #f1e3d0 100%);
+}
+
+.pocketBottom {
+  clip-path: polygon(0 100%, 50% 54%, 100% 100%);
+  background: linear-gradient(0deg, #f5e9d8 0%, #fdf8ef 100%);
+}
+
+.seams {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.seamShade,
+.seamLight {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.seamShade {
+  stroke: rgba(150, 110, 70, 0.3);
+  stroke-width: 1;
+}
+
+.seamLight {
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 1;
+  transform: translateY(0.24px);
+}
+
+.address {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--font-hand);
+  font-size: clamp(1.45rem, calc(var(--env-w) * 0.074), 2.15rem);
+  line-height: 1.1;
+  color: #8c5b4d;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.address svg {
+  display: block;
+  width: 78%;
+  margin: 4px auto 0;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
+
+/* ---------- the flap ---------- */
+
+.flapHolder {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  width: 100%;
+  height: var(--flap-h);
+}
+
+/* once the flap passes the vertical it goes behind the letter */
+.isFlap .flapHolder {
+  animation: flap-layer 1.1s steps(1, end) forwards;
+}
+
+.flapShadow {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(0 5px 5px rgba(100, 60, 45, 0.32));
+  transition: opacity 0.3s ease;
+}
+
+.flapShadow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #f4e8d6;
+  clip-path: polygon(0 0, 100% 0, 54% 96%, 50% 100%, 46% 96%);
+}
+
+.isFlap .flapShadow {
+  opacity: 0;
+}
+
+.flap {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 0;
+  transform-style: preserve-3d;
+  transform: perspective(1100px) rotateX(0deg);
+}
+
+.isFlap .flap {
+  animation: flap-open 1.1s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+.flapOuter,
+.flapInner {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px 10px 0 0;
+  clip-path: polygon(0 0, 100% 0, 54% 96%, 50% 100%, 46% 96%);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flapOuter {
+  background:
+    var(--grain-soft) 0 0 / 180px 180px,
+    linear-gradient(180deg, #fffaf1 0%, #f8eddd 55%, #f1e2cd 100%);
+}
+
+.flapInner {
+  transform: rotateX(180deg);
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 9px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.18) 0 1px, transparent 1px 9px),
+    linear-gradient(0deg, #e9c9c6 0%, #dcb0b0 100%);
+}
+
+.flapEdge {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.seal {
+  position: absolute;
+  left: 50%;
+  top: 85%;
+  width: clamp(46px, calc(var(--env-w) * 0.15), 68px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.sealSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 4px rgba(90, 25, 35, 0.4));
+}
+
+.sealRing {
+  position: absolute;
+  inset: -4%;
+  border: 2px solid var(--gold-light);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.isSeal .seal {
+  animation: seal-pop 0.52s ease-out both;
+}
+
+.isSeal .sealRing {
+  animation: seal-ring 0.75s ease-out both;
+}
+
+/* ---------- the call to action ---------- */
+
+.cta {
+  margin-top: clamp(2.6rem, 7vh, 3.8rem);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.isSeal .cta {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+
+/* ---------- the envelope falls away once the letter is out ---------- */
+
+.isPresent .back,
+.isPresent .front,
+.isPresent .flapHolder {
+  transform: translate3d(0, 26vh, 0) scale(0.9);
+  opacity: 0;
+  transition:
+    transform 1.15s cubic-bezier(0.55, 0, 0.8, 0.4) 0.1s,
+    opacity 0.8s ease-in 0.3s;
+}
+
+.isPresent .shadow {
+  opacity: 0;
+}
+
+/* ---------- keyframes ---------- */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-0.35deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(0.35deg);
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 0.65;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes flap-open {
+  from {
+    transform: perspective(1100px) rotateX(0deg);
+  }
+  to {
+    transform: perspective(1100px) rotateX(180deg);
+  }
+}
+
+@keyframes flap-layer {
+  from {
+    z-index: 6;
+  }
+  50% {
+    z-index: 1;
+  }
+  to {
+    z-index: 1;
+  }
+}
+
+@keyframes seal-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  40% {
+    transform: translate(-50%, -50%) scale(1.24) rotate(-7deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes seal-ring {
+  from {
+    opacity: 0.95;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+
+@keyframes lit {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope,
+  .halo {
+    animation: none;
+  }
+}
